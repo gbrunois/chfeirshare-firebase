@@ -52,3 +52,16 @@ function updateBeer(beerId, beer) {
       }
     );
 }
+
+function deleteBeer(beerId) {
+  firebase
+    .database()
+    .ref('beers/' + beerId)
+    .remove(function(error) {
+      if (error) {
+        console.log('Error: ' + error.code);
+      } else {
+        console.debug(`delete beers/${beerId} succeed`);
+      }
+    });
+}

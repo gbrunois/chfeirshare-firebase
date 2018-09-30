@@ -28,8 +28,11 @@ function buildHtmlBeersArray(beers) {
               beer.name
             }" style="display: none" /></td>
           <td>
-            <button type="button" onclick="editBeer(${beerId})" role="editBtn">Edit</button>
-            <button type="button" onclick="saveBeer(${beerId})" style="display: none" role="saveBtn">Save</button>
+            <button type="button" onclick="onClickEditBtn(${beerId})" role="editBtn">Edit</button>
+            <button type="button" onclick="onClickSaveBtn(${beerId})" style="display: none" role="saveBtn">Save</button>
+          </td>
+          <td>
+            <button type="button" onclick="onClickDeleteBtn(${beerId})" role="deleteBtn">Delete</button>
           </td>
         </tr>`;
   });
@@ -39,36 +42,40 @@ function buildHtmlBeersArray(beers) {
   beersContainerElement.innerHTML = beersHtmlArray;
 }
 
-function editBeer(beerId) {
-    const { input, text, editBtn, saveBtn } = getHtmlElements(beerId);
-    input.style['display'] = '';
-    text.style['display'] = 'none';
-    editBtn.style['display'] = 'none';
-    saveBtn.style['display'] = '';
-  }
-  
-  function saveBeer(beerId) {
-    const { input, text, editBtn, saveBtn } = getHtmlElements(beerId);
-    input.style['display'] = 'none';
-    text.style['display'] = '';
-    editBtn.style['display'] = '';
-    saveBtn.style['display'] = 'none';
-  
-    updateBeer(beerId, {
-      name: input.value,
-    });
-  }
-  
-  function getHtmlElements(index) {
-    const row = document.querySelector(`#beersContainer [row-id='${index}']`);
-    const input = row.querySelector(`[role='input']`);
-    const text = row.querySelector(`[role='text']`);
-    const editBtn = row.querySelector(`[role='editBtn']`);
-    const saveBtn = row.querySelector(`[role='saveBtn']`);
-    return {
-      input,
-      text,
-      editBtn,
-      saveBtn,
-    };
-  }
+function onClickEditBtn(beerId) {
+  const { input, text, editBtn, saveBtn } = getHtmlElements(beerId);
+  input.style['display'] = '';
+  text.style['display'] = 'none';
+  editBtn.style['display'] = 'none';
+  saveBtn.style['display'] = '';
+}
+
+function onClickSaveBtn(beerId) {
+  const { input, text, editBtn, saveBtn } = getHtmlElements(beerId);
+  input.style['display'] = 'none';
+  text.style['display'] = '';
+  editBtn.style['display'] = '';
+  saveBtn.style['display'] = 'none';
+
+  updateBeer(beerId, {
+    name: input.value,
+  });
+}
+
+function onClickDeleteBtn(beerId) {
+  deleteBeer(beerId);
+}
+
+function getHtmlElements(index) {
+  const row = document.querySelector(`#beersContainer [row-id='${index}']`);
+  const input = row.querySelector(`[role='input']`);
+  const text = row.querySelector(`[role='text']`);
+  const editBtn = row.querySelector(`[role='editBtn']`);
+  const saveBtn = row.querySelector(`[role='saveBtn']`);
+  return {
+    input,
+    text,
+    editBtn,
+    saveBtn,
+  };
+}
