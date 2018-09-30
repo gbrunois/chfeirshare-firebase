@@ -20,22 +20,24 @@
 </head>
 
 <body>
+  <h1>Rate a Beer</h1>
   <p id="load">Firebase SDK Loading&hellip;</p>
+  <div id="content" style="display: none">
+    <div id="message">
+      <h2 id="welcomText"></h2>
+      <button onclick="googleSignin()" id="btnSignIn" style="display: none">Google Signin</button>
+      <button onclick="googleSignout()" id="btnSignOut" style="display: none">Google Signout</button>
+    </div>
 
-  <div id="message">
-    <h2>Welcome</h2>
-    <button onclick="googleSignin()" id="btnSignIn">Google Signin</button>
-    <button onclick="googleSignout()" id="btnSignOut" style="display: none">Google Signout</button>
-  </div>
-
-  <div id="beersContainer">
-    <table>
-      <tr>
-        <td><input type="text" role="inputNew" value="" /></td>
-        <td></td>
-        <td><button type="button" onclick="onClickAddBtn()" role="addBtn">Add</button></td>
-      </tr>
-    </table>
+    <div id="beersContainer">
+      <table>
+        <tr>
+          <td><input type="text" role="inputNew" value="" /></td>
+          <td></td>
+          <td><button type="button" onclick="onClickAddBtn()" role="addBtn">Add</button></td>
+        </tr>
+      </table>
+    </div>
   </div>
   <script src="./scripts/index.js"></script>
 </body>

@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('content').style.display = '';
   try {
-    isAuthenticated()
+    onAuthStateChanged(authStateChanged);
     watchAllBeers(onReceiveBeersUpdate);
   } catch (e) {
     console.error(e);
@@ -8,6 +9,21 @@ document.addEventListener('DOMContentLoaded', function() {
       'Error loading the Firebase SDK, check the console.';
   }
 });
+
+function authStateChanged(user) {
+  const welcomTextEl = document.getElementById('welcomText');
+  const btnSignInEl = document.getElementById('btnSignIn');
+  const btnSignOutEl = document.getElementById('btnSignOut');
+  if (user) {
+    welcomTextEl.innerHTML = `Welcome ${user.displayName}`;
+    btnSignInEl.style.display = 'none';
+    btnSignOutEl.style.display = '';
+  } else {
+    welcomTextEl.innerHTML = `You're not logged in`;
+    btnSignInEl.style.display = '';
+    btnSignOutEl.style.display = 'none';
+  }
+}
 
 function onReceiveBeersUpdate(beers) {
   removeOnLoadingElement();

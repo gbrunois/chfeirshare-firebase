@@ -1,14 +1,8 @@
-
-let currentUID = null;
-
-function isAuthenticated() {
+function onAuthStateChanged(callback) {
   firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      console.log(user)
-    }
+    callback(user);
   });
 }
-
 
 function googleSignin(onAuthenticated) {
   provider = new firebase.auth.GoogleAuthProvider();
