@@ -19,55 +19,81 @@ function removeOnLoadingElement() {
 }
 
 function buildHtmlBeersArray(beers) {
-  let beersHtmlArray = '<table>';
-  beers.forEach((beer, beerId) => {
-    beersHtmlArray += `<tr row-id="${beerId}">
+  let beersHtmlRows = '';
+  beers.forEach(beer => {
+    beersHtmlRows += `
+        <tr row-beer-key="${beer.key}">
           <td>
             <span role="text">${beer.name}</span>
             <input type="text" role="input" value="${
               beer.name
-            }" style="display: none" /></td>
-          <td>
-            <button type="button" onclick="onClickEditBtn(${beerId})" role="editBtn">Edit</button>
-            <button type="button" onclick="onClickSaveBtn(${beerId})" style="display: none" role="saveBtn">Save</button>
+            }" style="display: none" />
           </td>
           <td>
-            <button type="button" onclick="onClickDeleteBtn(${beerId})" role="deleteBtn">Delete</button>
+            <button type="button" onclick="onClickEditBtn('${
+              beer.key
+            }')" role="editBtn">Edit</button>
+            <button type="button" onclick="onClickSaveBtn('${
+              beer.key
+            }')" style="display: none" role="saveBtn">Save</button>
+          </td>
+          <td>
+            <button type="button" onclick="onClickDeleteBtn('${
+              beer.key
+            }')" role="deleteBtn">Delete</button>
           </td>
         </tr>`;
   });
-  beersHtmlArray += '</table>';
 
-  const beersContainerElement = document.getElementById('beersContainer');
-  beersContainerElement.innerHTML = beersHtmlArray;
+  const beersTableElement = document.querySelector('#beersContainer table');
+  const rows = beersTableElement.querySelectorAll('tr[row-beer-key]');
+  const p = beersTableElement.querySelector('tr').parentElement;
+  (rows || []).forEach(trElement => p.removeChild(trElement));
+  beersTableElement
+    .querySelector('tr')
+    .insertAdjacentHTML('afterend', beersHtmlRows);
 }
 
-function onClickEditBtn(beerId) {
-  const { input, text, editBtn, saveBtn } = getHtmlElements(beerId);
+function onClickEditBtn(beerKey) {
+  const { input, text, editBtn, saveBtn } = getHtmlElements(beerKey);
   input.style['display'] = '';
   text.style['display'] = 'none';
   editBtn.style['display'] = 'none';
   saveBtn.style['display'] = '';
 }
 
-function onClickSaveBtn(beerId) {
-  const { input, text, editBtn, saveBtn } = getHtmlElements(beerId);
+function onClickSaveBtn(beerKey) {
+  const { input, text, editBtn, saveBtn } = getHtmlElements(beerKey);
   input.style['display'] = 'none';
   text.style['display'] = '';
   editBtn.style['display'] = '';
   saveBtn.style['display'] = 'none';
 
-  updateBeer(beerId, {
+  updateBeer({
+    key: beerKey,
     name: input.value,
   });
 }
 
-function onClickDeleteBtn(beerId) {
-  deleteBeer(beerId);
+function onClickDeleteBtn(beerKey) {
+  deleteBeer(beerKey);
+}
+
+function onClickAddBtn() {
+  const input = document.querySelector(`[role='inputNew']`);
+  if (input.value === '') {
+    return;
+  }
+  addNewBeer({
+    name: input.value,
+  });
+  input.value = '';
 }
 
 function getHtmlElements(index) {
-  const row = document.querySelector(`#beersContainer [row-id='${index}']`);
+  const row = document.querySelector(
+    `#beersContainer [row-beer-key='${index}']`
+  );
   const input = row.querySelector(`[role='input']`);
   const text = row.querySelector(`[role='text']`);
   const editBtn = row.querySelector(`[role='editBtn']`);

@@ -4,8 +4,10 @@ function watchAllBeers(onSnapshot) {
     'value',
     function(snapshot) {
       const beers = [];
-      snapshot.val().forEach(element => {
-        beers.push(element);
+      snapshot.forEach(childSnapshot => {
+        const item = childSnapshot.val();
+        item.key = childSnapshot.key;
+        beers.push(item);
       });
       onSnapshot(beers);
     },
@@ -16,29 +18,11 @@ function watchAllBeers(onSnapshot) {
   return ref;
 }
 
-function watchAllBreweries(callback) {
-  const ref = firebase.database().ref('breweries');
-  ref.on(
-    'value',
-    function(snapshot) {
-      const breweries = [];
-      snapshot.val().forEach(element => {
-        breweries.push(element);
-      });
-      callback(breweries);
-    },
-    function(error) {
-      console.log('Error: ' + error.code);
-    }
-  );
-  return ref;
-}
-
-function updateBeer(beerId, beer) {
-  console.debug(`update beers/${beerId} ${JSON.stringify(beer)}`);
+function updateBeer(beer) {
+  console.debug(`update beers/${beer.key} ${JSON.stringify(beer)}`);
   firebase
     .database()
-    .ref('beers/' + beerId)
+    .ref('beers/' + beer.key)
     .set(
       {
         name: beer.name,
@@ -47,21 +31,39 @@ function updateBeer(beerId, beer) {
         if (error) {
           console.log('Error: ' + error.code);
         } else {
-          console.debug(`update beers/${beerId} succeed`);
+          console.debug(`update beers/${beer.key} succeed`);
         }
       }
     );
 }
 
-function deleteBeer(beerId) {
+function deleteBeer(key) {
   firebase
     .database()
-    .ref('beers/' + beerId)
+    .ref('beers/' + key)
     .remove(function(error) {
       if (error) {
         console.log('Error: ' + error.code);
       } else {
-        console.debug(`delete beers/${beerId} succeed`);
+        console.debug(`delete beers/${key} succeed`);
+      }
+    });
+}
+
+function addNewBeer(beer) {
+  const newKey = firebase
+    .database()
+    .ref()
+    .child('beers')
+    .push().key;
+  return firebase
+    .database()
+    .ref('/beers/' + newKey)
+    .set(beer, function(error) {
+      if (error) {
+        console.log('Error: ' + error.code);
+      } else {
+        console.debug(`add new beers/${newKey} succeed`);
       }
     });
 }
