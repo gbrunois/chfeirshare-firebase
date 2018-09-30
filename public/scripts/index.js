@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('content').style.display = '';
+  removeOnLoadingElement();
   try {
     onAuthStateChanged(authStateChanged);
-    watchAllBeers(onReceiveBeersUpdate);
+    watchBeers(onNewBeerAdded, onBeerUpdated, onBeerDeleted);
   } catch (e) {
     console.error(e);
     document.getElementById('load').innerHTML =
@@ -25,20 +26,8 @@ function authStateChanged(user) {
   }
 }
 
-function onReceiveBeersUpdate(beers) {
-  removeOnLoadingElement();
-  buildHtmlBeersArray(beers);
-}
-
-function removeOnLoadingElement() {
-  const loadElement = document.getElementById('load');
-  loadElement.innerHTML = '';
-}
-
-function buildHtmlBeersArray(beers) {
-  let beersHtmlRows = '';
-  beers.forEach(beer => {
-    beersHtmlRows += `
+function onNewBeerAdded(beer) {
+  const beerHtmlRow = `
         <tr row-beer-key="${beer.key}">
           <td>
             <span role="text">${beer.name}</span>
@@ -60,19 +49,34 @@ function buildHtmlBeersArray(beers) {
             }')" role="deleteBtn">Delete</button>
           </td>
         </tr>`;
-  });
 
   const beersTableElement = document.querySelector('#beersContainer table');
-  const rows = beersTableElement.querySelectorAll('tr[row-beer-key]');
-  const p = beersTableElement.querySelector('tr').parentElement;
-  (rows || []).forEach(trElement => p.removeChild(trElement));
   beersTableElement
-    .querySelector('tr')
-    .insertAdjacentHTML('afterend', beersHtmlRows);
+    .querySelector('tr:last-child')
+    .insertAdjacentHTML('afterend', beerHtmlRow);
 }
+
+function onBeerUpdated(beer) {
+  const { text } = getHtmlElements(beer.key);
+  text.innerHTML = beer.name
+}
+
+function onBeerDeleted(beerKey) {
+  const beerRowElement = document.querySelector(
+    `#beersContainer table tr[row-beer-key='${beerKey}']`
+  );
+  beerRowElement.parentElement.removeChild(beerRowElement);
+}
+
+function removeOnLoadingElement() {
+  const loadElement = document.getElementById('load');
+  loadElement.innerHTML = '';
+}
+
 
 function onClickEditBtn(beerKey) {
   const { input, text, editBtn, saveBtn } = getHtmlElements(beerKey);
+  input.value = text.innerHTML
   input.style['display'] = '';
   text.style['display'] = 'none';
   editBtn.style['display'] = 'none';

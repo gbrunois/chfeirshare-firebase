@@ -1,21 +1,18 @@
-function watchAllBeers(onSnapshot) {
+function watchBeers(onChildAdded, onChildChanged, onChildRemoved) {
   const ref = firebase.database().ref('beers');
-  ref.on(
-    'value',
-    function(snapshot) {
-      const beers = [];
-      snapshot.forEach(childSnapshot => {
-        const item = childSnapshot.val();
-        item.key = childSnapshot.key;
-        beers.push(item);
-      });
-      onSnapshot(beers);
-    },
-    function(error) {
-      console.log('Error: ' + error.code);
-    }
-  );
-  return ref;
+  ref.on('child_added', data => {
+    const item = data.val();
+    item.key = data.key;
+    onChildAdded(item);
+  });
+  ref.on('child_changed', data => {
+    const item = data.val();
+    item.key = data.key;
+    onChildChanged(item);
+  });
+  ref.on('child_removed', data => {
+    onChildRemoved(data.key);
+  });
 }
 
 function updateBeer(beer) {
