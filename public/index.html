@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Welcome to Firebase Hosting</title>
+  <title>Welcome to Firebase Beers application</title>
 
   <!-- update the version number as needed -->
   <script defer src="/__/firebase/4.13.0/firebase-app.js"></script>
@@ -15,18 +15,19 @@
   <script defer src="/__/firebase/4.13.0/firebase-storage.js"></script>
   <!-- initialize the SDK after all desired features are loaded -->
   <script defer src="/__/firebase/init.js"></script>
-  <script src="./database.js"></script>
-  <script src="./authentication.js"></script>
+  <script src="./scripts/database.js"></script>
+  <script src="./scripts/authentication.js"></script>
 </head>
 
 <body>
+  <p id="load">Firebase SDK Loading&hellip;</p>
+
   <div id="message">
     <h2>Welcome</h2>
-    <button onclick="googleSignin()">Google Signin</button>
-    <button onclick="googleSignout()">Google Signout</button>
+    <button onclick="googleSignin()" id="btnSignIn">Google Signin</button>
+    <button onclick="googleSignout()" id="btnSignOut" style="display: none">Google Signout</button>
   </div>
 
-  <p id="load">Firebase SDK Loading&hellip;</p>
   <div id="beersContainer">
     <table>
       <tr>
@@ -36,7 +37,7 @@
       </tr>
     </table>
   </div>
-  <script src="index.js"></script>
+  <script src="./scripts/index.js"></script>
 </body>
 
 </html>

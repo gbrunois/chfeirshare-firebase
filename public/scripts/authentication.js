@@ -1,4 +1,16 @@
-function googleSignin() {
+
+let currentUID = null;
+
+function isAuthenticated() {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      console.log(user)
+    }
+  });
+}
+
+
+function googleSignin(onAuthenticated) {
   provider = new firebase.auth.GoogleAuthProvider();
   firebase
     .auth()
@@ -7,17 +19,12 @@ function googleSignin() {
       var token = result.credential.accessToken;
       var user = result.user;
 
-      readAllBeers();
-
-      console.log(token);
-      console.log(user);
+      if (onAuthenticated) {
+        onAuthenticated(token, user);
+      }
     })
     .catch(function(error) {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-
-      console.log(error.code);
-      console.log(error.message);
+      console.log('Error: ' + error.code);
     });
 }
 
@@ -30,6 +37,7 @@ function googleSignout() {
         console.log('Signout Succesfull');
       },
       function(error) {
+        console.log('Error: ' + error.code);
         console.log('Signout Failed');
       }
     );

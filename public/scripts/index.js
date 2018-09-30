@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   try {
+    isAuthenticated()
     watchAllBeers(onReceiveBeersUpdate);
   } catch (e) {
     console.error(e);
