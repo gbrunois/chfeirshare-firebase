@@ -17,29 +17,39 @@
   <script defer src="/__/firebase/init.js"></script>
   <script src="./scripts/database.js"></script>
   <script src="./scripts/authentication.js"></script>
+
+  <!-- Material Design Lite -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-orange.min.css">
+  <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+  <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
   <h1>Rate a Beer</h1>
   <p id="load">Firebase SDK Loading&hellip;</p>
-  <div id="content" style="display: none">
+  <main id="content" style="display: none">
     <div id="message">
-      <h2 id="welcomText"></h2>
-      <button onclick="googleSignin()" id="btnSignIn" style="display: none">Google Signin</button>
-      <button onclick="googleSignout()" id="btnSignOut" style="display: none">Google Signout</button>
+      <h4 id="welcomText">
+        </h2>
+        <button onclick="googleSignin()" id="btnSignIn" style="display: none">Google Signin</button>
+        <button onclick="googleSignout()" id="btnSignOut" style="display: none">Google Signout</button>
     </div>
 
-    <div id="beersContainer">
-      <table>
-        <tr>
-          <td><input type="text" role="inputNew" value="" /></td>
-          <td></td>
-          <td><button type="button" onclick="onClickAddBtn()" role="addBtn">Add</button></td>
-        </tr>
-      </table>
-    </div>
-  </div>
-  <script src="./scripts/index.js"></script>
+    <form id="beersForm" action="#">
+
+      <div class="display-flex">
+        <input type="text" role="inputNew" value="" class="mdl-textfield__input flex-1" />
+        <button type="button" onclick="onClickAddBtn()" role="addBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+          <i class="material-icons">add</i></button>
+        </div>
+
+      <ul class="mdl-list" id="beersList" class="display-flex">
+        <li></li>
+      </ul>
+      </div>
+      </div>
+      <script src="./scripts/index.js"></script>
 </body>
 
 </html>

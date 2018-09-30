@@ -28,31 +28,37 @@ function authStateChanged(user) {
 
 function onNewBeerAdded(beer) {
   const beerHtmlRow = `
-        <tr row-beer-key="${beer.key}">
-          <td>
+        <li class="mdl-list__item" row-beer-key="${beer.key}">
+          <div class="flex-1">
             <span role="text">${beer.name}</span>
             <input type="text" role="input" value="${
               beer.name
-            }" style="display: none" />
-          </td>
-          <td>
+            }" style="display: none" class="mdl-textfield__input" />
+          </div>
+          <span>
             <button type="button" onclick="onClickEditBtn('${
               beer.key
-            }')" role="editBtn">Edit</button>
+            }')" role="editBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+              <i class="material-icons">edit</i>
+            </button>
             <button type="button" onclick="onClickSaveBtn('${
               beer.key
-            }')" style="display: none" role="saveBtn">Save</button>
-          </td>
-          <td>
+            }')" style="display: none" role="saveBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+              <i class="material-icons">save</i>
+            </button>
+          </span>
+          <span>
             <button type="button" onclick="onClickDeleteBtn('${
               beer.key
-            }')" role="deleteBtn">Delete</button>
-          </td>
-        </tr>`;
+            }')" role="deleteBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+            <i class="material-icons">delete</i>
+          </button>
+          </span>
+        </li>`;
 
-  const beersTableElement = document.querySelector('#beersContainer table');
-  beersTableElement
-    .querySelector('tr:last-child')
+  const beersListElement = document.querySelector('#beersList');
+  beersListElement
+    .querySelector('li:last-child')
     .insertAdjacentHTML('afterend', beerHtmlRow);
 }
 
@@ -63,7 +69,7 @@ function onBeerUpdated(beer) {
 
 function onBeerDeleted(beerKey) {
   const beerRowElement = document.querySelector(
-    `#beersContainer table tr[row-beer-key='${beerKey}']`
+    `#beersList li[row-beer-key='${beerKey}']`
   );
   beerRowElement.parentElement.removeChild(beerRowElement);
 }
@@ -113,7 +119,7 @@ function onClickAddBtn() {
 
 function getHtmlElements(index) {
   const row = document.querySelector(
-    `#beersContainer [row-beer-key='${index}']`
+    `#beersList [row-beer-key='${index}']`
   );
   const input = row.querySelector(`[role='input']`);
   const text = row.querySelector(`[role='text']`);
