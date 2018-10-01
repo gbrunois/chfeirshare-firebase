@@ -1,10 +1,12 @@
+const App = (function () {
+
 window.addEventListener('load', function () {
 
   document.getElementById('content').style.display = '';
   removeOnLoadingElement();
   try {
-    onAuthStateChanged(authStateChanged);
-    watchBeers(onNewBeerAdded, onBeerUpdated, onBeerDeleted);
+    Authentification.onAuthStateChanged(authStateChanged);
+    Database.watchBeers(onNewBeerAdded, onBeerUpdated, onBeerDeleted);
   } catch (e) {
     console.error(e);
     showToast(e.message);
@@ -36,19 +38,19 @@ function onNewBeerAdded(beer) {
             }" style="display: none" class="mdl-textfield__input" />
           </div>
           <span>
-            <button type="button" onclick="onClickEditBtn('${
+            <button type="button" onclick="App.onClickEditBtn('${
               beer.key
             }')" role="editBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
               <i class="material-icons">edit</i>
             </button>
-            <button type="button" onclick="onClickSaveBtn('${
+            <button type="button" onclick="App.onClickSaveBtn('${
               beer.key
             }')" style="display: none" role="saveBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
               <i class="material-icons">save</i>
             </button>
           </span>
           <span>
-            <button type="button" onclick="onClickDeleteBtn('${
+            <button type="button" onclick="App.onClickDeleteBtn('${
               beer.key
             }')" role="deleteBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
             <i class="material-icons">delete</i>
@@ -81,9 +83,7 @@ function removeOnLoadingElement() {
   loadElement.style.display = 'none'
 }
 
-
 function onClickEditBtn(beerKey) {
-
   const {
     input,
     text,
@@ -109,14 +109,14 @@ function onClickSaveBtn(beerKey) {
   editBtn.style['display'] = '';
   saveBtn.style['display'] = 'none';
 
-  updateBeer({
+  Database.updateBeer({
     key: beerKey,
     name: input.value,
   });
 }
 
 function onClickDeleteBtn(beerKey) {
-  deleteBeer(beerKey);
+  Database.deleteBeer(beerKey);
 }
 
 function onClickAddBtn() {
@@ -124,7 +124,7 @@ function onClickAddBtn() {
   if (input.value === '') {
     return;
   }
-  addNewBeer({
+  Database.addNewBeer({
     name: input.value,
   });
   input.value = '';
@@ -154,3 +154,10 @@ function showToast(message) {
   };
   snackbarContainer.MaterialSnackbar.showSnackbar(data);
 }
+return {
+  onClickAddBtn,
+  onClickDeleteBtn,
+  onClickSaveBtn,
+  onClickEditBtn,
+}
+})();

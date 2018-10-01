@@ -6,18 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Welcome to Firebase Beers application</title>
 
-  <!-- update the version number as needed -->
-  <script defer src="/__/firebase/4.13.0/firebase-app.js"></script>
-  <!-- include only the Firebase features as you need -->
-  <script defer src="/__/firebase/4.13.0/firebase-auth.js"></script>
-  <script defer src="/__/firebase/4.13.0/firebase-database.js"></script>
-  <script defer src="/__/firebase/4.13.0/firebase-messaging.js"></script>
-  <script defer src="/__/firebase/4.13.0/firebase-storage.js"></script>
-  <!-- initialize the SDK after all desired features are loaded -->
-  <script defer src="/__/firebase/init.js"></script>
-  <script src="./scripts/database.js"></script>
-  <script src="./scripts/authentication.js"></script>
-
   <!-- Material Design Lite -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-orange.min.css">
@@ -39,9 +27,9 @@
         <div id="message">
           <h4 id="welcomText">
             </h2>
-            <button onclick="googleSignin()" id="btnSignIn" style="display: none" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Google
+            <button onclick="Authentification.googleSignin()" id="btnSignIn" style="display: none" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Google
               Signin</button>
-            <button onclick="googleSignout()" id="btnSignOut" style="display: none" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Google
+            <button onclick="Authentification.googleSignout()" id="btnSignOut" style="display: none" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Google
               Signout</button>
         </div>
 
@@ -64,6 +52,17 @@
     <div class="mdl-snackbar__text"></div>
     <button class="mdl-snackbar__action" type="button"></button>
   </div>
+  <!-- update the version number as needed -->
+  <script src="/__/firebase/4.13.0/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script src="/__/firebase/4.13.0/firebase-auth.js"></script>
+  <script src="/__/firebase/4.13.0/firebase-database.js"></script>
+  <script src="/__/firebase/4.13.0/firebase-messaging.js"></script>
+  <script src="/__/firebase/4.13.0/firebase-storage.js"></script>
+  <!-- initialize the SDK after all desired features are loaded -->
+  <script src="/__/firebase/init.js"></script>
+  <script src="./scripts/database.js"></script>
+  <script src="./scripts/authentication.js"></script>
   <script src="./scripts/index.js"></script>
 </body>
 
