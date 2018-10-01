@@ -26,30 +26,38 @@
 </head>
 
 <body>
-  <h1>Rate a Beer</h1>
-  <p id="load">Firebase SDK Loading&hellip;</p>
-  <main id="content" style="display: none">
-    <div id="message">
-      <h4 id="welcomText">
-        </h2>
-        <button onclick="googleSignin()" id="btnSignIn" style="display: none">Google Signin</button>
-        <button onclick="googleSignout()" id="btnSignOut" style="display: none">Google Signout</button>
-    </div>
-
-    <form id="beersForm" action="#">
-
-      <div class="display-flex">
-        <input type="text" role="inputNew" value="" class="mdl-textfield__input flex-1" />
-        <button type="button" onclick="onClickAddBtn()" role="addBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
-          <i class="material-icons">add</i></button>
+  <div class="ma-20">
+    <header>
+      <h1>Rate a Beer</h1>
+    </header>
+    <aside>
+      <p id="load">Firebase SDK Loading&hellip;</p>
+      <div id="content" style="display: none">
+        <div id="message">
+          <h4 id="welcomText">
+            </h2>
+            <button onclick="googleSignin()" id="btnSignIn" style="display: none" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Google
+              Signin</button>
+            <button onclick="googleSignout()" id="btnSignOut" style="display: none" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Google
+              Signout</button>
         </div>
 
-      <ul class="mdl-list" id="beersList" class="display-flex">
-        <li></li>
-      </ul>
+        <form id="beersForm" action="#">
+
+          <div class="display-flex">
+            <input type="text" role="inputNew" value="" class="mdl-textfield__input flex-1" />
+            <button type="button" onclick="onClickAddBtn()" role="addBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+              <i class="material-icons">add</i></button>
+          </div>
+
+          <ul class="mdl-list" id="beersList" class="display-flex">
+            <li></li>
+          </ul>
+        </form>
       </div>
-      </div>
-      <script src="./scripts/index.js"></script>
+    </aside>
+  </div>
+  <script src="./scripts/index.js"></script>
 </body>
 
 </html>
