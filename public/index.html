@@ -31,7 +31,10 @@
       <h1>Rate a Beer</h1>
     </header>
     <aside>
-      <p id="load">Firebase SDK Loading&hellip;</p>
+      <div id="load">
+        <span>Firebase SDK Loading&hellip; </span>
+        <div class="mdl-spinner mdl-js-spinner is-active"></div>
+      </div>
       <div id="content" style="display: none">
         <div id="message">
           <h4 id="welcomText">
@@ -56,6 +59,10 @@
         </form>
       </div>
     </aside>
+  </div>
+  <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
+    <div class="mdl-snackbar__text"></div>
+    <button class="mdl-snackbar__action" type="button"></button>
   </div>
   <script src="./scripts/index.js"></script>
 </body>

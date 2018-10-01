@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('load', function () {
+
   document.getElementById('content').style.display = '';
   removeOnLoadingElement();
   try {
@@ -6,8 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     watchBeers(onNewBeerAdded, onBeerUpdated, onBeerDeleted);
   } catch (e) {
     console.error(e);
-    document.getElementById('load').innerHTML =
-      'Error loading the Firebase SDK, check the console.';
+    showToast(e.message);
   }
 });
 
@@ -63,7 +63,9 @@ function onNewBeerAdded(beer) {
 }
 
 function onBeerUpdated(beer) {
-  const { text } = getHtmlElements(beer.key);
+  const {
+    text
+  } = getHtmlElements(beer.key);
   text.innerHTML = beer.name
 }
 
@@ -76,12 +78,18 @@ function onBeerDeleted(beerKey) {
 
 function removeOnLoadingElement() {
   const loadElement = document.getElementById('load');
-  loadElement.innerHTML = '';
+  loadElement.style.display = 'none'
 }
 
 
 function onClickEditBtn(beerKey) {
-  const { input, text, editBtn, saveBtn } = getHtmlElements(beerKey);
+
+  const {
+    input,
+    text,
+    editBtn,
+    saveBtn
+  } = getHtmlElements(beerKey);
   input.value = text.innerHTML
   input.style['display'] = '';
   text.style['display'] = 'none';
@@ -90,7 +98,12 @@ function onClickEditBtn(beerKey) {
 }
 
 function onClickSaveBtn(beerKey) {
-  const { input, text, editBtn, saveBtn } = getHtmlElements(beerKey);
+  const {
+    input,
+    text,
+    editBtn,
+    saveBtn
+  } = getHtmlElements(beerKey);
   input.style['display'] = 'none';
   text.style['display'] = '';
   editBtn.style['display'] = '';
@@ -131,4 +144,13 @@ function getHtmlElements(index) {
     editBtn,
     saveBtn,
   };
+}
+
+function showToast(message) {
+  var snackbarContainer = document.querySelector('#snackbar');
+  var data = {
+    message,
+    timeout: 2000,
+  };
+  snackbarContainer.MaterialSnackbar.showSnackbar(data);
 }
