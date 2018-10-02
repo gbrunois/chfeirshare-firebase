@@ -1,41 +1,40 @@
-const App = (function () {
+const App = (function() {
+  window.addEventListener('load', function() {
+    document.getElementById('content').style.display = '';
+    removeOnLoadingElement();
+    try {
+      Authentification.onAuthStateChanged(authStateChanged);
+      Database.watchBeers(onNewBeerAdded, onBeerUpdated, onBeerDeleted);
+    } catch (e) {
+      console.error(e);
+      showToast(e.message);
+    }
+  });
 
-window.addEventListener('load', function () {
-
-  document.getElementById('content').style.display = '';
-  removeOnLoadingElement();
-  try {
-    Authentification.onAuthStateChanged(authStateChanged);
-    Database.watchBeers(onNewBeerAdded, onBeerUpdated, onBeerDeleted);
-  } catch (e) {
-    console.error(e);
-    showToast(e.message);
+  function authStateChanged(user) {
+    const welcomTextEl = document.getElementById('welcomText');
+    const btnSignInEl = document.getElementById('btnSignIn');
+    const btnSignOutEl = document.getElementById('btnSignOut');
+    if (user) {
+      welcomTextEl.innerHTML = `Welcome ${user.displayName}`;
+      btnSignInEl.style.display = 'none';
+      btnSignOutEl.style.display = '';
+    } else {
+      welcomTextEl.innerHTML = `You're not logged in`;
+      btnSignInEl.style.display = '';
+      btnSignOutEl.style.display = 'none';
+    }
   }
-});
 
-function authStateChanged(user) {
-  const welcomTextEl = document.getElementById('welcomText');
-  const btnSignInEl = document.getElementById('btnSignIn');
-  const btnSignOutEl = document.getElementById('btnSignOut');
-  if (user) {
-    welcomTextEl.innerHTML = `Welcome ${user.displayName}`;
-    btnSignInEl.style.display = 'none';
-    btnSignOutEl.style.display = '';
-  } else {
-    welcomTextEl.innerHTML = `You're not logged in`;
-    btnSignInEl.style.display = '';
-    btnSignOutEl.style.display = 'none';
-  }
-}
-
-function onNewBeerAdded(beer) {
-  const beerHtmlRow = `
+  function onNewBeerAdded(beer) {
+    const beerHtmlRow = `
         <li class="mdl-list__item" row-beer-key="${beer.key}">
           <div class="flex-1">
             <span role="text">${beer.name}</span>
             <input type="text" role="input" value="${
               beer.name
             }" style="display: none" class="mdl-textfield__input" />
+            ${Rating.buildStarsRating(beer.key, beer.rate)}
           </div>
           <span>
             <button type="button" onclick="App.onClickEditBtn('${
@@ -58,106 +57,103 @@ function onNewBeerAdded(beer) {
           </span>
         </li>`;
 
-  const beersListElement = document.querySelector('#beersList');
-  beersListElement
-    .querySelector('li:last-child')
-    .insertAdjacentHTML('afterend', beerHtmlRow);
-}
-
-function onBeerUpdated(beer) {
-  const {
-    text
-  } = getHtmlElements(beer.key);
-  text.innerHTML = beer.name
-}
-
-function onBeerDeleted(beerKey) {
-  const beerRowElement = document.querySelector(
-    `#beersList li[row-beer-key='${beerKey}']`
-  );
-  beerRowElement.parentElement.removeChild(beerRowElement);
-}
-
-function removeOnLoadingElement() {
-  const loadElement = document.getElementById('load');
-  loadElement.style.display = 'none'
-}
-
-function onClickEditBtn(beerKey) {
-  const {
-    input,
-    text,
-    editBtn,
-    saveBtn
-  } = getHtmlElements(beerKey);
-  input.value = text.innerHTML
-  input.style['display'] = '';
-  text.style['display'] = 'none';
-  editBtn.style['display'] = 'none';
-  saveBtn.style['display'] = '';
-}
-
-function onClickSaveBtn(beerKey) {
-  const {
-    input,
-    text,
-    editBtn,
-    saveBtn
-  } = getHtmlElements(beerKey);
-  input.style['display'] = 'none';
-  text.style['display'] = '';
-  editBtn.style['display'] = '';
-  saveBtn.style['display'] = 'none';
-
-  Database.updateBeer({
-    key: beerKey,
-    name: input.value,
-  });
-}
-
-function onClickDeleteBtn(beerKey) {
-  Database.deleteBeer(beerKey);
-}
-
-function onClickAddBtn() {
-  const input = document.querySelector(`[role='inputNew']`);
-  if (input.value === '') {
-    return;
+    const beersListElement = document.querySelector('#beersList');
+    beersListElement
+      .querySelector('li:last-child')
+      .insertAdjacentHTML('afterend', beerHtmlRow);
+    Rating.setStartsRatingEvents(beer.key, onRateChanged);
   }
-  Database.addNewBeer({
-    name: input.value,
-  });
-  input.value = '';
-}
 
-function getHtmlElements(index) {
-  const row = document.querySelector(
-    `#beersList [row-beer-key='${index}']`
-  );
-  const input = row.querySelector(`[role='input']`);
-  const text = row.querySelector(`[role='text']`);
-  const editBtn = row.querySelector(`[role='editBtn']`);
-  const saveBtn = row.querySelector(`[role='saveBtn']`);
+  function onRateChanged(key) {
+    onClickSaveBtn(key);
+  }
+
+  function onBeerUpdated(beer) {
+    const { text } = getHtmlElements(beer.key);
+    if (beer.rate) {
+      Rating.setRateValue(beer.key, beer.rate);
+    }
+    text.innerHTML = beer.name;
+  }
+
+  function onBeerDeleted(beerKey) {
+    const beerRowElement = document.querySelector(
+      `#beersList li[row-beer-key='${beerKey}']`
+    );
+    beerRowElement.parentElement.removeChild(beerRowElement);
+  }
+
+  function removeOnLoadingElement() {
+    const loadElement = document.getElementById('load');
+    loadElement.style.display = 'none';
+  }
+
+  function onClickEditBtn(beerKey) {
+    const { input, text, editBtn, saveBtn } = getHtmlElements(beerKey);
+    input.value = text.innerHTML;
+    input.style['display'] = '';
+    text.style['display'] = 'none';
+    editBtn.style['display'] = 'none';
+    saveBtn.style['display'] = '';
+  }
+
+  function onClickSaveBtn(beerKey) {
+    const { input, text, editBtn, saveBtn } = getHtmlElements(beerKey);
+    const rate = Rating.getRateValue(beerKey);
+    input.style['display'] = 'none';
+    text.style['display'] = '';
+    editBtn.style['display'] = '';
+    saveBtn.style['display'] = 'none';
+
+    Database.updateBeer({
+      key: beerKey,
+      name: input.value,
+      rate,
+    });
+  }
+
+  function onClickDeleteBtn(beerKey) {
+    Database.deleteBeer(beerKey);
+  }
+
+  function onClickAddBtn() {
+    const input = document.querySelector(`[role='inputNew']`);
+    if (input.value === '') {
+      return;
+    }
+    Database.addNewBeer({
+      name: input.value,
+    });
+    input.value = '';
+  }
+
+  function getHtmlElements(index) {
+    const row = document.querySelector(`#beersList [row-beer-key='${index}']`);
+    const input = row.querySelector(`[role='input']`);
+    const text = row.querySelector(`[role='text']`);
+    const editBtn = row.querySelector(`[role='editBtn']`);
+    const saveBtn = row.querySelector(`[role='saveBtn']`);
+    return {
+      input,
+      text,
+      editBtn,
+      saveBtn,
+    };
+  }
+
+  function showToast(message) {
+    var snackbarContainer = document.querySelector('#snackbar');
+    var data = {
+      message,
+      timeout: 2000,
+    };
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+  }
+
   return {
-    input,
-    text,
-    editBtn,
-    saveBtn,
+    onClickAddBtn,
+    onClickDeleteBtn,
+    onClickSaveBtn,
+    onClickEditBtn,
   };
-}
-
-function showToast(message) {
-  var snackbarContainer = document.querySelector('#snackbar');
-  var data = {
-    message,
-    timeout: 2000,
-  };
-  snackbarContainer.MaterialSnackbar.showSnackbar(data);
-}
-return {
-  onClickAddBtn,
-  onClickDeleteBtn,
-  onClickSaveBtn,
-  onClickEditBtn,
-}
 })();

@@ -1,10 +1,10 @@
-const Authentification = (function () {
+const Authentification = (function() {
   'use strict';
 
   let provider = new firebase.auth.GoogleAuthProvider();
 
   function onAuthStateChanged(callback) {
-    firebase.auth().onAuthStateChanged(function (user) {
+    firebase.auth().onAuthStateChanged(function(user) {
       callback(user);
     });
   }
@@ -13,7 +13,7 @@ const Authentification = (function () {
     firebase
       .auth()
       .signInWithPopup(provider)
-      .then(function (result) {
+      .then(function(result) {
         var token = result.credential.accessToken;
         var user = result.user;
 
@@ -21,7 +21,7 @@ const Authentification = (function () {
           onAuthenticated(token, user);
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log('Error: ' + error.code);
       });
   }
@@ -31,10 +31,10 @@ const Authentification = (function () {
       .auth()
       .signOut()
       .then(
-        function () {
+        function() {
           console.log('Signout Succesfull');
         },
-        function (error) {
+        function(error) {
           console.log('Error: ' + error.code);
           console.log('Signout Failed');
         }
@@ -43,6 +43,6 @@ const Authentification = (function () {
   return {
     onAuthStateChanged,
     googleSignin,
-    googleSignout
-  }
+    googleSignout,
+  };
 })();
