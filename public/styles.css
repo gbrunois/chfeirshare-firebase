@@ -10,3 +10,17 @@
 .flex-1 {
     flex: 1
 }
+
+.stars-container {
+    margin: 0
+}
+
+.stars-container .rating-star.rating-star-outline::before {
+    color: #bdbdbd;
+    content: 'star_border'
+}
+
+.stars-container .rating-star.rating-star-full::before {
+    color: #f57c00;
+    content: 'star'
+}

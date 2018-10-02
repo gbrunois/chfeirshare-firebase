@@ -1,4 +1,4 @@
-const Database = (function () {
+const Database = (function() {
   function watchBeers(onChildAdded, onChildChanged, onChildRemoved) {
     const ref = firebase.database().ref('beers');
     ref.on('child_added', data => {
@@ -21,10 +21,12 @@ const Database = (function () {
     firebase
       .database()
       .ref('beers/' + beer.key)
-      .set({
+      .set(
+        {
           name: beer.name,
+          rate: beer.rate,
         },
-        function (error) {
+        function(error) {
           if (error) {
             console.log('Error: ' + error.code);
           } else {
@@ -38,7 +40,7 @@ const Database = (function () {
     firebase
       .database()
       .ref('beers/' + key)
-      .remove(function (error) {
+      .remove(function(error) {
         if (error) {
           console.log('Error: ' + error.code);
         } else {
@@ -56,7 +58,7 @@ const Database = (function () {
     return firebase
       .database()
       .ref('/beers/' + newKey)
-      .set(beer, function (error) {
+      .set(beer, function(error) {
         if (error) {
           console.log('Error: ' + error.code);
         } else {
@@ -68,6 +70,6 @@ const Database = (function () {
     addNewBeer,
     deleteBeer,
     updateBeer,
-    watchBeers
-  }
+    watchBeers,
+  };
 })();
