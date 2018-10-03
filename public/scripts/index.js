@@ -4,7 +4,6 @@ const App = (function() {
     removeOnLoadingElement();
     try {
       Authentification.onAuthStateChanged(authStateChanged);
-      Database.watchBeers(onNewBeerAdded, onBeerUpdated, onBeerDeleted);
     } catch (e) {
       console.error(e);
       showToast(e.message);
@@ -24,6 +23,12 @@ const App = (function() {
       btnSignInEl.style.display = '';
       btnSignOutEl.style.display = 'none';
     }
+    document
+      .querySelectorAll('#beersList li[row-beer-key]')
+      .forEach(beerRowElement =>
+        beerRowElement.parentElement.removeChild(beerRowElement)
+      );
+    Database.watchBeers(onNewBeerAdded, onBeerUpdated, onBeerDeleted);
   }
 
   function onNewBeerAdded(beer) {
@@ -31,10 +36,11 @@ const App = (function() {
         <li class="mdl-list__item" row-beer-key="${beer.key}">
           <div class="flex-1">
             <span role="text">${beer.name}</span>
+            <span role="rate">${beer.rate ? beer.rate : '-'} / 5</span>
             <input type="text" role="input" value="${
               beer.name
             }" style="display: none" class="mdl-textfield__input" />
-            ${Rating.buildStarsRating(beer.key, beer.rate)}
+            ${Rating.buildStarsRating(beer.key, beer.userRate)}
           </div>
           <span>
             <button type="button" onclick="App.onClickEditBtn('${
@@ -61,17 +67,17 @@ const App = (function() {
     beersListElement
       .querySelector('li:last-child')
       .insertAdjacentHTML('afterend', beerHtmlRow);
-    Rating.setStartsRatingEvents(beer.key, onRateChanged);
+    Rating.setStartsRatingEvents(beer.key, onUserRatingChanged);
   }
 
-  function onRateChanged(key) {
-    onClickSaveBtn(key);
+  function onUserRatingChanged(key, rateValue) {
+    Database.rateABeer(key, rateValue);
   }
 
   function onBeerUpdated(beer) {
-    const { text } = getHtmlElements(beer.key);
+    const { text, rateText } = getHtmlElements(beer.key);
     if (beer.rate) {
-      Rating.setRateValue(beer.key, beer.rate);
+      rateText.innerHTML = beer.rate;
     }
     text.innerHTML = beer.name;
   }
@@ -133,11 +139,13 @@ const App = (function() {
     const text = row.querySelector(`[role='text']`);
     const editBtn = row.querySelector(`[role='editBtn']`);
     const saveBtn = row.querySelector(`[role='saveBtn']`);
+    const rateText = row.querySelector(`[role='rate']`);
     return {
       input,
       text,
       editBtn,
       saveBtn,
+      rateText,
     };
   }
 

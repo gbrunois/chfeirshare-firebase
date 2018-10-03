@@ -1,8 +1,9 @@
 const Rating = (function() {
   'use strict';
 
-  function buildStarsRating(key, rateValue = 0) {
-    let html = `<div class="stars-container" data-key="${key}" data-value="${rateValue}">`;
+  function buildStarsRating(key, rateValue) {
+    let html = `<div class="stars-container" data-key="${key}" data-value="${rateValue ||
+      '0'}">`;
     for (let i = 1; i < 6; i++) {
       const cssClass =
         i <= rateValue ? 'rating-star-full' : 'rating-star-outline';
@@ -29,7 +30,9 @@ const Rating = (function() {
     setRateValue(key, overRateValue);
   }
 
-  function onmouseout(e, originalRateValue) {
+  function onmouseout(e) {
+    const containerElement = e.srcElement.parentElement;
+    const originalRateValue = containerElement.attributes['data-value'].value;
     const key = e.srcElement.parentElement.attributes['data-key'].value;
     resetRateValue(key, originalRateValue);
   }
