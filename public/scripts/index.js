@@ -28,6 +28,7 @@ const App = (function() {
       .forEach(beerRowElement =>
         beerRowElement.parentElement.removeChild(beerRowElement)
       );
+    Database.unWatchBeers();
     Database.watchBeers(onNewBeerAdded, onBeerUpdated, onBeerDeleted);
   }
 
