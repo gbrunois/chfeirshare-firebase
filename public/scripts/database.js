@@ -1,6 +1,8 @@
 const Database = (function() {
+  let beersRef = null;
+
   function watchBeers(onChildAdded, onChildChanged, onChildRemoved) {
-    const beersRef = firebase.database().ref('beers');
+    beersRef = firebase.database().ref('beers');
     beersRef.on('child_added', data => {
       const item = data.val();
       item.key = data.key;
@@ -14,6 +16,13 @@ const Database = (function() {
     beersRef.on('child_removed', data => {
       onChildRemoved(data.key);
     });
+  }
+
+  function unWatchBeers() {
+    if (beersRef) {
+      beersRef.off();
+      beersRef = null;
+    }
   }
 
   function watchUserRate(beer, callback) {
@@ -94,6 +103,7 @@ const Database = (function() {
     deleteBeer,
     updateBeer,
     watchBeers,
+    unWatchBeers,
     rateABeer,
   };
 })();
